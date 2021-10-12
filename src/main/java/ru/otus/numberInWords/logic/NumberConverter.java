@@ -43,7 +43,7 @@ public class NumberConverter {
      * @return - StringBuilder с результатом
      */
     private StringBuilder formingStringBuilderOfCurrencyPart(InputNumber inputNumber) {
-        StringBuilder stringRepresentationOfNumber = new StringBuilder(100);
+        StringBuilder stringRepresentationOfNumber = new StringBuilder(100); // константа
         long number = inputNumber.getWholePartOfNumber();
 
         if(number == 0)

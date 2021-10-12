@@ -15,7 +15,11 @@ public class Program {
 
     public void startProgram() {
         System.out.printf(Messages.WELCOME_MESSAGE.getMessage());
+
         while (true) {
+            String s = input.nextLine();
+            s.replace('.',',');
+            double x = Double.valueOf(s);
             if (input.hasNextDouble()) {
                 double number = input.nextDouble();
                 inputNumber = new InputNumber(number);
