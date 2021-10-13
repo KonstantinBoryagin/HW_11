@@ -1,5 +1,6 @@
 package ru.otus.numberInWords;
 
+import ru.otus.numberInWords.data.Messages;
 import ru.otus.numberInWords.logic.Program;
 
 
@@ -10,6 +11,14 @@ public class Main {
 
     public static void main(String[] args) {
         Program program = new Program();
-        program.startProgram();
+
+        System.out.printf(Messages.WELCOME_MESSAGE.getMessage());
+
+        boolean programStatus = true;
+
+        while(programStatus){
+            programStatus = program.start();
+
+        }
     }
 }
