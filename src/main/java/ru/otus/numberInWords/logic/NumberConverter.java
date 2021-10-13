@@ -3,6 +3,7 @@ package ru.otus.numberInWords.logic;
 import ru.otus.numberInWords.data.Currency;
 import ru.otus.numberInWords.data.Messages;
 import ru.otus.numberInWords.data.Number;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,27 +12,35 @@ import java.util.List;
  */
 public class NumberConverter {
 
-    /** Индекс разряда числа */
+    /**
+     * Индекс разряда числа
+     */
     private int dischargeRank;
-    /** Индекс окончания числа в зависимости от разряда */
+    /**
+     * Индекс окончания числа в зависимости от разряда
+     */
     private int numbersRanksEndingsIndex;
+    /**
+     * Константы для задания размера StringBuilder
+     */
     private static final int MAIN_STRING_BUILDER_SIZE = 100;
     private static final int ADDITIONAL_STRING_BUILDER_SIZE = 50;
 
     /**
      * Конвертирует число в строку (финальный метод, собирает в одну строку результаты преобразований остальных методов)
+     *
      * @param inputNumber - класс хранящий полученное число
      * @return - строку с результатом преобразования
      */
-    public String convertingNumberToString(InputNumber inputNumber) {
+    public String convertNumberToString(InputNumber inputNumber) {
         if (!isInputNumberInAcceptableRange(inputNumber))
             return Messages.INPUT_FAIL.getMessage();
 
-        StringBuilder numberToString = formingStringBuilderOfCurrencyPart(inputNumber);
+        StringBuilder numberToString = formStringBuilderOfCurrencyPart(inputNumber);
 
         if (inputNumber.getFractionalPartLength() > 0) {
             numberToString.append(Messages.AND.getMessage());
-            numberToString.append(formingStringBuilderOfPennyPart(inputNumber));
+            numberToString.append(formStringBuilderOfPennyPart(inputNumber));
         }
         if (!inputNumber.isPositiveNumber()) {
             numberToString.insert(0, Messages.MINUS.getMessage());
@@ -42,28 +51,31 @@ public class NumberConverter {
 
     /**
      * Формирует строковое представление целой части числа (рубли)
+     *
      * @param inputNumber - класс хранящий полученное число
      * @return - StringBuilder с результатом
      */
-    private StringBuilder formingStringBuilderOfCurrencyPart(InputNumber inputNumber) {
+    private StringBuilder formStringBuilderOfCurrencyPart(InputNumber inputNumber) {
         StringBuilder stringRepresentationOfNumber = new StringBuilder(MAIN_STRING_BUILDER_SIZE);
         long number = inputNumber.getWholePartOfNumber();
 
-        if(number == 0)
+        if (number == 0) {
             stringRepresentationOfNumber.append(Number.EXCEPTIONAL_CASE.getExceptionalCase());
-        else
+        } else {
             convertNumberToString(number, stringRepresentationOfNumber, Currency.CURRENCY);
-
+        }
         stringRepresentationOfNumber.append(Currency.CURRENCY.getCurrencyValuesArray()[inputNumber.getCurrencyIndex()]);
 
         return stringRepresentationOfNumber;
     }
 
-    /** Формирует строковое представление дробной части числа (копейки)
+    /**
+     * Формирует строковое представление дробной части числа (копейки)
+     *
      * @param inputNumber - класс хранящий полученное число
      * @return - StringBuilder с результатом
      */
-    private StringBuilder formingStringBuilderOfPennyPart(InputNumber inputNumber) {
+    private StringBuilder formStringBuilderOfPennyPart(InputNumber inputNumber) {
         long fractionalPartOfNumber = inputNumber.getFractionalPartOfNumber();
         StringBuilder pennyToString = new StringBuilder(ADDITIONAL_STRING_BUILDER_SIZE);
         convertNumberToString(fractionalPartOfNumber, pennyToString, Currency.PENNY);
@@ -72,21 +84,24 @@ public class NumberConverter {
         return pennyToString;
     }
 
-    /** Определяет допустимую длину числа для преобразования */
+    /**
+     * Определяет допустимую длину числа для преобразования
+     */
     private boolean isInputNumberInAcceptableRange(InputNumber inputNumber) {
         return inputNumber.getNumberLength() <= 15 && inputNumber.getFractionalPartLength() <= 2;
     }
 
     /**
      * Конвертирует число в строку (добавляет окончания, считает индекс разрядов числа)
-     * @param number - число которое необходимо конвертировать в строку
+     *
+     * @param number                       - число которое необходимо конвертировать в строку
      * @param stringRepresentationOfNumber - StringBuilder для сохранения результата преобразования
-     * @param currency - валюта с которой нужно выполнять конвертацию
+     * @param currency                     - валюта с которой нужно выполнять конвертацию
      */
     private void convertNumberToString(long number, StringBuilder stringRepresentationOfNumber, Currency currency) {
         while (number > 0) {
             int partOfTheNumber = (int) (number % 1000);
-            String result = convertingPartNumberToString(partOfTheNumber, currency);
+            String result = convertPartNumberToString(partOfTheNumber, currency);
 
             if (dischargeRank > 0)
                 stringRepresentationOfNumber.insert(0,
@@ -102,29 +117,31 @@ public class NumberConverter {
 
     /**
      * Определяет с помощью какого из методов конвертировать часть числа (до 3-х цифр) в строку
-     * @param number - число которое необходимо конвертировать в строку
+     *
+     * @param number   - число которое необходимо конвертировать в строку
      * @param currency - валюта с которой нужно выполнять конвертацию
      * @return - результат в виде строки
      */
-    private String convertingPartNumberToString(int number, Currency currency) {
+    private String convertPartNumberToString(int number, Currency currency) {
         StringBuilder stringBuffer = new StringBuilder(ADDITIONAL_STRING_BUILDER_SIZE);
         stringBuffer.append(Number.RANKS.getValuesArray()[dischargeRank]);
         List<Integer> listOfNumbers = convertNumberToList(number);
         int extraNumber = number % 100;
         if (extraNumber > 10 && extraNumber < 20) {
-            convertingPartNumberToStringWithExtraNumber(listOfNumbers, stringBuffer);
+            convertPartNumberToStringWithExtraNumber(listOfNumbers, stringBuffer);
         } else {
-            convertingPartNumberToStringWithStandardNumber(currency, listOfNumbers, stringBuffer);
+            convertPartNumberToStringWithStandardNumber(currency, listOfNumbers, stringBuffer);
         }
         return stringBuffer.toString();
     }
 
     /**
      * Совершает преобразование для "исключительного" случая (число кончается на цифры от 11 до 19)
+     *
      * @param listOfNumbers - List цифр (не более 3-х)
-     * @param stringBuffer - буфер для записи результата
+     * @param stringBuffer  - буфер для записи результата
      */
-    private void convertingPartNumberToStringWithExtraNumber(List<Integer> listOfNumbers, StringBuilder stringBuffer) {
+    private void convertPartNumberToStringWithExtraNumber(List<Integer> listOfNumbers, StringBuilder stringBuffer) {
         int index = listOfNumbers.get(0);
         stringBuffer.insert(0, Number.PRIME_FROM_11_TO_19.getValuesArray()[index]);
         if (listOfNumbers.size() > 2) {
@@ -136,11 +153,12 @@ public class NumberConverter {
 
     /**
      * Преобразует поочередно каждую цифру из листа в строку с учетом окончаний для переданной валюты
-     * @param currency - валюта, исходя из которой формируются окончания слов
+     *
+     * @param currency     - валюта, исходя из которой формируются окончания слов
      * @param listONumbers - List с цифрами (не более 3-х)
      * @param stringBuffer - буфер для сохранения результата
      */
-    private void convertingPartNumberToStringWithStandardNumber(Currency currency, List<Integer> listONumbers, StringBuilder stringBuffer) {
+    private void convertPartNumberToStringWithStandardNumber(Currency currency, List<Integer> listONumbers, StringBuilder stringBuffer) {
         for (int i = 0; i < listONumbers.size(); i++) {
             int index = listONumbers.get(i);
             if (i == 0) {
@@ -172,6 +190,7 @@ public class NumberConverter {
 
     /**
      * Преобразует число в List состоящий из его цифр
+     *
      * @param number - число для преобразования
      * @return - List из числа
      */

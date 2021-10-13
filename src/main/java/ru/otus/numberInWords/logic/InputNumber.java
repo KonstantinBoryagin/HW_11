@@ -65,7 +65,7 @@ public class InputNumber {
     }
 
     /**
-     * @return длинну целой части числа
+     * @return длину целой части числа
      */
      public int getNumberLength(){
         String temp = String.valueOf(wholePartOfNumber);
@@ -73,7 +73,7 @@ public class InputNumber {
     }
 
     /**
-     * @return длинну дробной части числа
+     * @return длину дробной части числа
      */
     public int getFractionalPartLength(){
         if(fractionalPartMarker > 0) {

@@ -1,6 +1,5 @@
 package ru.otus.numberInWords.logic;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -17,7 +16,7 @@ class NumberConverterParameterizedTest {
     @ParameterizedTest(name = "{index}: number = {1}")
     @MethodSource("methodData")
     void convertingNumberToStringTest(String expected, double param) {
-        assertEquals(expected, numberConverter.convertingNumberToString(new InputNumber(param)));
+        assertEquals(expected, numberConverter.convertNumberToString(new InputNumber(param)));
     }
 
     static Stream<Arguments> methodData(){

@@ -20,7 +20,7 @@ public class Program {
         if (input.hasNextDouble()) {
             double number = input.nextDouble();
             inputNumber = new InputNumber(number);
-            String result = numberConverter.convertingNumberToString(inputNumber);
+            String result = numberConverter.convertNumberToString(inputNumber);
             System.out.println(result);
         } else if (input.nextLine().equalsIgnoreCase("Q")) {
             return false;
