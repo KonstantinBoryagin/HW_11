@@ -17,19 +17,36 @@ public class Program {
         System.out.printf(Messages.WELCOME_MESSAGE.getMessage());
 
         while (true) {
-            String s = input.nextLine();
-            s.replace('.',',');
-            double x = Double.valueOf(s);
-            if (input.hasNextDouble()) {
-                double number = input.nextDouble();
-                inputNumber = new InputNumber(number);
-                String result = numberConverter.convertingNumberToString(inputNumber);
-                System.out.println(result);
-            } else if (input.nextLine().equalsIgnoreCase("Q")) {
+//            String s = input.nextLine();
+//            s.replace('.',',');
+//            double x = Double.valueOf(s);
+            if(!start()){
                 break;
-            } else {
-                System.out.println(Messages.FAIL_MESSAGE.getMessage());
             }
+//            if (input.hasNextDouble()) {
+//                double number = input.nextDouble();
+//                inputNumber = new InputNumber(number);
+//                String result = numberConverter.convertingNumberToString(inputNumber);
+//                System.out.println(result);
+//            } else if (input.nextLine().equalsIgnoreCase("Q")) {
+//                break;
+//            } else {
+//                System.out.println(Messages.FAIL_MESSAGE.getMessage());
+//            }
         }
+    }
+
+    public boolean start(){
+        if (input.hasNextDouble()) {
+            double number = input.nextDouble();
+            inputNumber = new InputNumber(number);
+            String result = numberConverter.convertingNumberToString(inputNumber);
+            System.out.println(result);
+        } else if (input.nextLine().equalsIgnoreCase("Q")) {
+            return false;
+        } else {
+            System.out.println(Messages.FAIL_MESSAGE.getMessage());
+        }
+        return true;
     }
 }

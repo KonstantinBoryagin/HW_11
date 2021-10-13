@@ -1,6 +1,7 @@
 package ru.otus.numberInWords.logic;
 
 import lombok.Getter;
+import ru.otus.numberInWords.data.Currency;
 
 import java.math.BigDecimal;
 
@@ -30,6 +31,11 @@ public class InputNumber {
         fractionalPartMarker = fractionalPart.doubleValue();
     }
 
+
+    /**
+     * @return индекс с нужным склонением копеек
+     * {@link Currency#PENNY}
+     */
     public int getPennyIndex(){
         convertFractionalPartOfNumber();
         calculatePennyIndex();
@@ -46,6 +52,9 @@ public class InputNumber {
         pennyIndex = calculateCurrencyIndex(fractionalPartOfNumber);
     }
 
+    /**
+     * @return дробную часть числа (long)
+     */
     public long getFractionalPartOfNumber() {
         convertFractionalPartOfNumber();
         return fractionalPartOfNumber;
@@ -55,11 +64,17 @@ public class InputNumber {
         fractionalPartOfNumber = (long) (getFractionalPartMarker() * 100);
     }
 
+    /**
+     * @return длинну целой части числа
+     */
      public int getNumberLength(){
         String temp = String.valueOf(wholePartOfNumber);
         return temp.length();
     }
 
+    /**
+     * @return длинну дробной части числа
+     */
     public int getFractionalPartLength(){
         if(fractionalPartMarker > 0) {
             String[] number = String.valueOf(fractionalPart).split("\\.");

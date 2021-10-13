@@ -15,6 +15,8 @@ public class NumberConverter {
     private int dischargeRank;
     /** Индекс окончания числа в зависимости от разряда */
     private int numbersRanksEndingsIndex;
+    private static final int MAIN_STRING_BUILDER_SIZE = 100;
+    private static final int ADDITIONAL_STRING_BUILDER_SIZE = 50;
 
     /**
      * Конвертирует число в строку (финальный метод, собирает в одну строку результаты преобразований остальных методов)
@@ -28,12 +30,13 @@ public class NumberConverter {
         StringBuilder numberToString = formingStringBuilderOfCurrencyPart(inputNumber);
 
         if (inputNumber.getFractionalPartLength() > 0) {
-            numberToString.append("и ");
+            numberToString.append(Messages.AND.getMessage());
             numberToString.append(formingStringBuilderOfPennyPart(inputNumber));
         }
         if (!inputNumber.isPositiveNumber()) {
-            numberToString.insert(0, "минус ");
+            numberToString.insert(0, Messages.MINUS.getMessage());
         }
+        numberToString.trimToSize();
         return numberToString.toString();
     }
 
@@ -43,7 +46,7 @@ public class NumberConverter {
      * @return - StringBuilder с результатом
      */
     private StringBuilder formingStringBuilderOfCurrencyPart(InputNumber inputNumber) {
-        StringBuilder stringRepresentationOfNumber = new StringBuilder(100); // константа
+        StringBuilder stringRepresentationOfNumber = new StringBuilder(MAIN_STRING_BUILDER_SIZE);
         long number = inputNumber.getWholePartOfNumber();
 
         if(number == 0)
@@ -62,7 +65,7 @@ public class NumberConverter {
      */
     private StringBuilder formingStringBuilderOfPennyPart(InputNumber inputNumber) {
         long fractionalPartOfNumber = inputNumber.getFractionalPartOfNumber();
-        StringBuilder pennyToString = new StringBuilder(50);
+        StringBuilder pennyToString = new StringBuilder(ADDITIONAL_STRING_BUILDER_SIZE);
         convertNumberToString(fractionalPartOfNumber, pennyToString, Currency.PENNY);
         pennyToString.append(Currency.PENNY.getCurrencyValuesArray()[inputNumber.getPennyIndex()]);
 
@@ -104,7 +107,7 @@ public class NumberConverter {
      * @return - результат в виде строки
      */
     private String convertingPartNumberToString(int number, Currency currency) {
-        StringBuilder stringBuffer = new StringBuilder(50);
+        StringBuilder stringBuffer = new StringBuilder(ADDITIONAL_STRING_BUILDER_SIZE);
         stringBuffer.append(Number.RANKS.getValuesArray()[dischargeRank]);
         List<Integer> listOfNumbers = convertNumberToList(number);
         int extraNumber = number % 100;
